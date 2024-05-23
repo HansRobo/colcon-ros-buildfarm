@@ -10,6 +10,7 @@ from colcon_core.event_handler import add_event_handler_arguments
 from colcon_core.executor import add_executor_arguments
 from colcon_core.executor import execute_jobs
 from colcon_core.executor import Job
+from colcon_core.executor import OnError
 from colcon_core.logging import colcon_logger
 from colcon_core.package_augmentation import augment_packages
 from colcon_core.package_discovery import add_package_discovery_arguments
@@ -33,11 +34,35 @@ from colcon_ros_buildfarm.package_selection \
 from colcon_ros_buildfarm.package_selection \
     import select_package_decorators
 
-
 DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com' \
     '/ros2/ros_buildfarm_config/ros2/index.yaml'
 
 logger = colcon_logger.getChild(__name__)
+
+
+class BuildBuildfarmPackageArguments:
+    """Arguments to build a specific ROS buildfarm package."""
+
+    def __init__(self, pkg, args, os_name, os_code_name, arch):
+        """
+        Construct a BuildBuildfarmPackageArguments.
+
+        :param pkg: The package descriptor
+        :param args: The parsed command line arguments
+        """
+        self.arch = arch
+        self.build_base = os.path.abspath(os.path.join(
+            os.getcwd(), args.build_base, pkg.name))
+        self.build_name = args.build_name
+        self.config_url = args.config_url
+        self.os_code_name = os_code_name
+        self.os_name = os_name
+        self.ros_buildfarm_branch = args.ros_buildfarm_branch
+        self.ros_distro = args.ros_distro
+
+        # TODO(cottsay): These should be dynamic
+        self.package_repository = args.package_repository
+        self.repo_base = args.repo_base
 
 
 def _discover_packages(args):
@@ -46,8 +71,7 @@ def _discover_packages(args):
 
     # Inject ros_workspace dependency
     ros_workspace = next(
-        iter(d for d in descs if d.name == 'ros_workspace'),
-        None)
+        iter(d for d in descs if d.name == 'ros_workspace'), None)
     if ros_workspace:
         workspace_deps = {
             ros_workspace.name,
@@ -73,6 +97,16 @@ def _get_packages(args):
     return decorators
 
 
+def _get_job_id(pkg_name, args):
+    ros_distro_prefix = args.ros_distro[0].upper()
+    prefix = f'{ros_distro_prefix}rel'
+    if args.build_name != 'default':
+        prefix += f'_{args.build_name}'
+
+    return f'{prefix}__{pkg_name}__' \
+        f'{args.os_name}_{args.os_code_name}_{args.arch}'
+
+
 def _get_jobs(args, decorators):
     jobs = OrderedDict()
     for decorator in decorators:
@@ -93,16 +127,23 @@ def _get_jobs(args, decorators):
         for dep_name in decorator.recursive_dependencies:
             recursive_dependencies[dep_name] = dep_name
 
-        task_context = TaskContext(
-            pkg=pkg, args=args,
-            dependencies=recursive_dependencies)
+        for os_name, os_code_name, arch in pkg.metadata['target_platforms']:
+            package_args = BuildBuildfarmPackageArguments(
+                pkg, args, os_name, os_code_name, arch)
+            task_context = TaskContext(
+                pkg=pkg, args=package_args,
+                dependencies=recursive_dependencies)
 
-        job = Job(
-            identifier=pkg.name,
-            dependencies=set(recursive_dependencies.keys()),
-            task=extension, task_context=task_context)
+            dependency_identifiers = {
+                _get_job_id(dep, package_args)
+                for dep in recursive_dependencies.keys()}
 
-        jobs[job.identifier] = job
+            job = Job(
+                identifier=_get_job_id(pkg.name, package_args),
+                dependencies=dependency_identifiers,
+                task=extension, task_context=task_context)
+
+            jobs[job.identifier] = job
 
     return jobs
 
@@ -135,6 +176,12 @@ class RosBuildfarmVerb(VerbExtensionPoint):
         parser.add_argument(
             '--config-url',
             default=DEFAULT_CONFIG_URL)
+        parser.add_argument(
+            '--continue-on-error',
+            action='store_true',
+            help='Continue other packages when a package fails to build '
+                 '(packages recursively depending on the failed package are '
+                 'skipped)')
 
         parser.add_argument(
             '--build-base',
@@ -176,4 +223,7 @@ class RosBuildfarmVerb(VerbExtensionPoint):
 
         jobs = _get_jobs(context.args, decorators)
 
-        return execute_jobs(context, jobs)
+        on_error = OnError.interrupt \
+            if not context.args.continue_on_error else OnError.skip_downstream
+
+        return execute_jobs(context, jobs, on_error=on_error)

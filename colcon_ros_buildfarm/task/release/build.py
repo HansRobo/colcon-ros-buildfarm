@@ -27,12 +27,6 @@ class BuildfarmReleaseBuildTask(TaskExtensionPoint):
         args = self.context.args
         pkg = self.context.pkg
 
-        for os_name, os_code_name, arch in pkg.metadata['target_platforms']:
-            rc = await self._build(args, pkg, os_name, os_code_name, arch)
-            if rc:
-                return rc
-
-    async def _build(self, args, pkg, os_name, os_code_name, arch):
         staging_dir = Path(args.build_base) / pkg.name
         repo_dir = staging_dir / 'ros_buildfarm'
         binary_dir = staging_dir / 'binary'
@@ -47,6 +41,7 @@ class BuildfarmReleaseBuildTask(TaskExtensionPoint):
         binary_dir.mkdir(parents=True)
         source_dir.mkdir(parents=True)
 
+        self.progress('setup')
         ros_buildfarm_branch = getattr(args, 'ros_buildfarm_branch', 'master')
         clone_res = await run(self.context, [
             'git', 'clone', '--depth', '1', '-b', ros_buildfarm_branch, '-q',
@@ -69,8 +64,8 @@ class BuildfarmReleaseBuildTask(TaskExtensionPoint):
             repo_dir / 'scripts' / 'release' / 'generate_release_script.py')
         generation_cmd = [
             'python3', str(generation_script_path), args.config_url,
-            args.ros_distro, args.build_name, pkg.name, os_name,
-            os_code_name, arch]
+            args.ros_distro, args.build_name, pkg.name, args.os_name,
+            args.os_code_name, args.arch]
         logger.debug('Invoking script generation command: {}'.format(
             ' '.join(generation_cmd)))
         with script_path.open('wb') as script_file:
@@ -81,6 +76,7 @@ class BuildfarmReleaseBuildTask(TaskExtensionPoint):
         if gen_res.returncode:
             return gen_res.returncode
 
+        self.progress('build')
         build_res = await run(
             self.context, ['sh', 'job.sh', '-y'], cwd=str(staging_dir))
         if build_res.returncode:
@@ -88,7 +84,9 @@ class BuildfarmReleaseBuildTask(TaskExtensionPoint):
 
         # Import the built artifacts
 
+        self.progress('import')
         extension = get_package_repository_extension(args)
-        await extension.import_source(args, os_name, os_code_name, source_dir)
+        await extension.import_source(
+            args, args.os_name, args.os_code_name, source_dir)
         await extension.import_binary(
-            args, os_name, os_code_name, arch, binary_dir)
+            args, args.os_name, args.os_code_name, args.arch, binary_dir)

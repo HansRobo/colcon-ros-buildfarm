@@ -43,6 +43,9 @@ def discover_packages_from_distro(distro, condition_context):
         desc.name = pkg_name
         desc.type = 'ros_buildfarm.release'
         pkg_xml = distro.get_release_package_xml(pkg_name)
+        if not pkg_xml:
+            logger.debug(f"No package manifest found for package '{pkg_name}'")
+            continue
         try:
             pkg = parse_package_string(pkg_xml)
         except InvalidPackage as e:
