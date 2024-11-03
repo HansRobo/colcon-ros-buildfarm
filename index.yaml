@@ -23,8 +23,7 @@ distributions:
     doc_builds:
       default: humble/doc-build.yaml
     notification_emails:
-    - audrow+build.ros2.org@openrobotics.org
-    - ros2-buildfarm-humble@googlegroups.com
+    - pythagora.yoshimoto@gmail.com
     release_builds:
       default: humble/release-build.yaml
       rhel: humble/release-rhel-build.yaml
@@ -52,8 +51,7 @@ distributions:
     doc_builds:
       default: iron/doc-build.yaml
     notification_emails:
-    - yadunund+build.ros2.org@openrobotics.org
-    - ros2-buildfarm-iron@googlegroups.com
+    - pythagora.yoshimoto@gmail.com
     release_builds:
       default: iron/release-build.yaml
       rhel: iron/release-rhel-build.yaml
@@ -81,8 +79,7 @@ distributions:
     doc_builds:
       default: jazzy/doc-build.yaml
     notification_emails:
-    - marcogg+build.ros2.org@intrinsic.ai
-    - ros2-buildfarm-jazzy@googlegroups.com
+    - pythagora.yoshimoto@gmail.com
     release_builds:
       default: jazzy/release-build.yaml
       rhel: jazzy/release-rhel-build.yaml
@@ -110,8 +107,7 @@ distributions:
     doc_builds:
       default: rolling/doc-build.yaml
     notification_emails:
-    - steven+build.ros2.org@openrobotics.org
-    - ros2-buildfarm-rolling@googlegroups.com
+    - pythagora.yoshimoto@gmail.com
     release_builds:
       default: rolling/release-build.yaml
       rhel: rolling/release-rhel-build.yaml
@@ -120,7 +116,7 @@ distributions:
       default: rolling/source-build.yaml
 jenkins_url: https://build.ros2.org
 notification_emails:
-- steven+build.ros2.org@openrobotics.org
+- pythagora.yoshimoto@gmail.com
 prerequisites:
   debian_repositories:
   - http://repo.ros2.org/ubuntu/building
