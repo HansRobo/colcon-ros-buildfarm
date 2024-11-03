@@ -10,7 +10,7 @@ repositories:
   colcon-ros-distro:
     type: git
     url: https://github.com/colcon/colcon-ros-distro.git
-    version: devel
+    version: main # devel is merged
   ros_buildfarm:
     type: git
     url: https://github.com/ros-infrastructure/ros_buildfarm.git
