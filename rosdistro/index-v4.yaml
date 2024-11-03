@@ -5,21 +5,21 @@
 distributions:
   humble:
     distribution: [humble/distribution.yaml]
-    distribution_cache: http://repo.ros2.org/rosdistro_cache/humble-cache.yaml.gz
+    distribution_cache: https://raw.githubusercontent.com/HansRobo/colcon-ros-buildfarm/refs/heads/devel-customized/rosdistro/cache/humble.yaml
     distribution_status: active
     distribution_type: ros2
     python_version: 3
-  jazzy:
-    distribution: [jazzy/distribution.yaml]
-    distribution_cache: http://repo.ros2.org/rosdistro_cache/jazzy-cache.yaml.gz
-    distribution_status: active
-    distribution_type: ros2
-    python_version: 3
-  rolling:
-    distribution: [rolling/distribution.yaml]
-    distribution_cache: http://repo.ros2.org/rosdistro_cache/rolling-cache.yaml.gz
-    distribution_status: rolling
-    distribution_type: ros2
-    python_version: 3
+  # jazzy:
+  #   distribution: [jazzy/distribution.yaml]
+  #   distribution_cache: http://repo.ros2.org/rosdistro_cache/jazzy-cache.yaml.gz
+  #   distribution_status: active
+  #   distribution_type: ros2
+  #   python_version: 3
+  # rolling:
+  #   distribution: [rolling/distribution.yaml]
+  #   distribution_cache: http://repo.ros2.org/rosdistro_cache/rolling-cache.yaml.gz
+  #   distribution_status: rolling
+  #   distribution_type: ros2
+  #   python_version: 3
 type: index
 version: 4
