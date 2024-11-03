@@ -2,7 +2,7 @@ repositories:
   colcon-core:
     type: git
     url: https://github.com/colcon/colcon-core.git
-    version: cottsay/generic-package-selection
+    version: master # cottsay/generic-package-selection is merged
   colcon-ros-buildfarm:
     type: git
     url: https://github.com/colcon/colcon-ros-buildfarm.git
