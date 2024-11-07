@@ -1,0 +1,117 @@
+%YAML 1.1
+# ROS distribution file
+# see REP 143: http://ros.org/reps/rep-0143.html
+---
+release_platforms:
+  rhel:
+  - '8'
+  ubuntu:
+  - jammy
+repositories:
+  autoware_adapi_msgs:
+    release:
+      packages:
+      - autoware_adapi_v1_msgs
+      - autoware_adapi_version_msgs
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_adapi_msgs-release.git
+      version: 1.3.0-1
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
+      version: main
+    status: developed
+  autoware_auto_msgs:
+    doc:
+      type: git
+      url: https://gitlab.com/autowarefoundation/autoware.auto/autoware_auto_msgs.git
+      version: master
+    release:
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_auto_msgs-release.git
+      version: 1.0.0-4
+    source:
+      type: git
+      url: https://gitlab.com/autowarefoundation/autoware.auto/autoware_auto_msgs.git
+      version: master
+    status: developed
+  autoware_cmake:
+    release:
+      packages:
+      - autoware_cmake
+      - autoware_lint_common
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_cmake-release.git
+      version: 1.0.0-2
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_cmake.git
+      version: main
+    status: developed
+  autoware_internal_msgs:
+    release:
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_internal_msgs-release.git
+      version: 1.1.0-1
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_internal_msgs.git
+      version: main
+    status: developed
+  autoware_lanelet2_extension:
+    release:
+      packages:
+      - autoware_lanelet2_extension
+      - autoware_lanelet2_extension_python
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_lanelet2_extension-release.git
+      version: 0.6.0-1
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_lanelet2_extension.git
+      version: main
+    status: developed
+  autoware_msgs:
+    doc:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_msgs.git
+      version: main
+    release:
+      packages:
+      - autoware_common_msgs
+      - autoware_control_msgs
+      - autoware_localization_msgs
+      - autoware_map_msgs
+      - autoware_perception_msgs
+      - autoware_planning_msgs
+      - autoware_sensing_msgs
+      - autoware_system_msgs
+      - autoware_v2x_msgs
+      - autoware_vehicle_msgs
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_msgs-release.git
+      version: 1.2.0-1
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_msgs.git
+      version: main
+    status: developed
+  autoware_utils:
+    release:
+      tags:
+        release: release/humble/{package}/{version}
+      url: https://github.com/ros2-gbp/autoware_utils-release.git
+      version: 1.0.0-1
+    source:
+      type: git
+      url: https://github.com/autowarefoundation/autoware_utils.git
+      version: main
+    status: developed
+type: distribution
+version: 2
