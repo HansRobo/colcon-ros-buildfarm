@@ -6,17 +6,6 @@ abi_incompatibility_assumed: true
 build_environment_variables:
   RTI_NC_LICENSE_ACCEPTED: 'yes'
 
-jenkins_binary_job_priority: 85
-jenkins_binary_job_timeout: 150
-jenkins_source_job_priority: 75
-jenkins_source_job_timeout: 30
-notifications:
-  emails:
-  - pythagora.yoshimoto@gmail.com
-  maintainers: true
-sync:
-  package_count: 499
-  packages: [desktop]
 repositories:
   keys:
   - |
@@ -51,12 +40,12 @@ repositories:
     =i0tj
     -----END PGP PUBLIC KEY BLOCK-----
   urls:
-  - http://repo.ros2.org/ubuntu/building
+  - http://repo.ros2.org/ubuntu/main
 target_repository: http://repo.ros2.org/ubuntu/building
 targets:
   ubuntu:
     jammy:
       amd64:
 type: release-build
-upload_credential_id: jenkins-agent
+upload_credential_id: null
 version: 2
